@@ -115,15 +115,15 @@
 				
 			} else {
 				if (lastPage == 0){
-					if(keyCode == 0x42 || ControlEvent == PerksMenuCommand){
+					if(keyCode == 0x42 || (_isController && ControlEvent == PerksMenuCommand)){
 						onPerkButtonPress();
-					} else if(PrevPredButton.ButtonEnabled && (keyCode == 0xA2 || ControlEvent == "LShoulder")){
+					} else if(PrevPredButton.ButtonEnabled && (keyCode == 0xA2 || (_isController && ControlEvent == "LShoulder"))){
 						onPrevPred()
-					} else if(NextPredButton.ButtonEnabled && (keyCode == 0xA4 || ControlEvent == "RShoulder")){
+					} else if(NextPredButton.ButtonEnabled && (keyCode == 0xA4 || (_isController && ControlEvent == "RShoulder"))){
 						onNextPred()
 					}
 				} else if (lastPage == 1){
-					if(SwallowItemButton.ButtonVisible && (keyCode == 0x42 || ControlEvent == "LShoulder")){
+					if(SwallowItemButton.ButtonVisible && (keyCode == 0x42 || (_isController && ControlEvent == "LShoulder"))){
 						onSwallowItemButtonPress()
 					}
 				}
