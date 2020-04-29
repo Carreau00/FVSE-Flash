@@ -21,6 +21,7 @@
 		public var Capacity_tf:TextField;
 		public var XPMeter_mc:XPMeter;
 		public var CurrSelectedActor:int;
+		public var WeightWidget_mc:WeightWidget;
 		
 		private var _actorStatsArray:Array;
 		private var _DescText:String;
@@ -33,6 +34,8 @@
 		private var _reqXP:Number;
 		private var _currentPreyCount:uint;
 		private var _maxCapacity:Number;
+		private var _currentWeight:uint;
+		private var _maxWeight:uint;
 		
 		public function VoreTab() {
 			// constructor code
@@ -44,6 +47,7 @@
 			_currentPreyCount = 0;
 			List_mc.addEventListener(BSScrollingListEx.SELECTION_CHANGE, this.onListSelectionChange);
 			TextFieldEx.setTextAutoSize(this.Description_tf, TextFieldEx.TEXTAUTOSZ_SHRINK);
+			TextFieldEx.setTextAutoSize(this.Name_tf, TextFieldEx.TEXTAUTOSZ_SHRINK);
 			__setProp_List_mc_VORETab_List_0();
 		}
 		
@@ -98,11 +102,14 @@
 			PlayerPerkPoints = actorStatsArray[0][1][7];
 			_preyLevel = DataArray[8];
 			_predLevel = DataArray[9];
-			_currentXP = DataArray[11]
-			_reqXP = DataArray[12]
+			_currentXP = DataArray[11];
+			_reqXP = DataArray[12];
+			trace("[FVSE] _currentXP: " + _currentXP + " _reqXP: " + _reqXP);
 			_maxCapacity = DataArray[16];
 			_currentPreyCount = DataArray[17];
 			_name = DataArray[18];
+			WeightWidget_mc.MaxWeight = DataArray[19];
+			WeightWidget_mc.CurrentWeight = DataArray[20];
 			PartialInvalidate();
 			
 			List_mc.entryList = StatsArray;
@@ -113,6 +120,8 @@
 			GlobalFunc.SetText(Name_tf, String(_name), false);
 			GlobalFunc.SetText(PreyLevel_tf, String(_preyLevel), false);
 			XPMeter_mc.SetMeter(_currentXP, 0, _reqXP);
+			WeightWidget_mc.SetWidget();
+			
 			if(_predLevel > 0){
 				GlobalFunc.SetText(PredLevelLabel_tf, "$Pred_Level", false);
 				GlobalFunc.SetText(CapacityLabel_tf, "$Capacity", false);
@@ -151,7 +160,7 @@
 			{
 			}
 			this.List_mc.listEntryClass = "VOREListEntry";
-			this.List_mc.numListItems = 10;
+			this.List_mc.numListItems = 9;
 			this.List_mc.restoreListIndex = false;
 			this.List_mc.textOption = "Shrink To Fit";
 			this.List_mc.verticalSpacing = 0;
