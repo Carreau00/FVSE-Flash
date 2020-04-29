@@ -119,7 +119,7 @@
             };
         }
 		
-		private function enterFrameHandler(e:Event):void {
+		protected function enterFrameHandler(e:Event):void {
 			var FillPercent:Number
 
 			if (this.TargetPercent > this.MeterPercent){

@@ -23,6 +23,7 @@
 		public var StruggleDisplayGroup_mc:StruggleDisplayGroup;
 		
 		private var KeyPressCounter:Number = 0;
+		private var HealthCounter:Number = 1;
 		
 		private static const Command_ThiccUpdateStats:Number				= 100;
 		private static const Command_ThiccUpdateName:Number					= 110;
@@ -37,6 +38,10 @@
 		private static const Command_StruggleResult:Number					= 330;
 		private static const Command_StruggleChangeStage:Number				= 340;
 		private static const Command_UpdateControlType:Number				= 350;
+		
+		private static const Command_UpdateHealthBar:Number					= 400;
+		private static const Command_RemoveHealthBar:Number					= 410;
+		private static const Command_ClearAllHealthBars:Number				= 420;
 
 		private static const Command_DebugToggle:Number						= 1000;
 		
@@ -45,7 +50,7 @@
 			//getHUDFramework();
 			
 			//this.addEventListener(Event.ADDED_TO_STAGE, addedToStageHandler);
-			//stage.addEventListener(KeyboardEvent.KEY_DOWN, keyDownHandler);
+			stage.addEventListener(KeyboardEvent.KEY_DOWN, keyDownHandler);
 		}
 		
 		public function getHUDFramework():void {
@@ -56,7 +61,7 @@
 		}
 		
 		public function processMessage(command:String, params:Array):void {
-			//DebugFunc.debugTrace("processMessage() command: " + command + " params: " + params);
+			DebugFunc.debugTrace("processMessage() command: " + command + " params: " + params);
 			switch(command) {
 				case String(Command_UpdatePlayerXP):
 				case "UpdatePlayerXP":
@@ -103,6 +108,18 @@
 				case String(Command_UpdateControlType):
 				case "UpdateControlType":
 					processUpdateControlType(Number(params[0]));
+					break;
+				case String(Command_UpdateHealthBar):
+				case "UpdateHealthBar":
+					processHealthBar(String(params[0]))
+					break;
+				case String(Command_RemoveHealthBar):
+				case "RemoveHealthBar":
+					removeHealthBar(int(params[0]))
+					break;
+				case String(Command_ClearAllHealthBars):
+				case "ClearAllHealthBars":
+					ClearAllHealthBars()
 					break;
 				case String(Command_DebugToggle):
 				case "DebugToggle":
@@ -172,17 +189,32 @@
 			StruggleDisplayGroup_mc.StruggleResults(StageID, LocationPercent);
 		}
 		
+		public function processHealthBar(MessageString:String):void{
+			VoreNotificationsGroup_mc.processHealthbar(MessageString);
+		}
+		
+		public function removeHealthBar(Index:int):void{
+			VoreNotificationsGroup_mc.processRemoveHealthbar(Index);
+		}
+		
+		public function ClearAllHealthBars():void{
+			VoreNotificationsGroup_mc.clearAllHealthBars();
+		}
+		
 		public function processDebugToggle(bEnabled:int):void{
 			DebugFunc.SetDebugEnabled(bEnabled);
 		}
-
+		
 		private function keyDownHandler(e:KeyboardEvent):void {
 			switch (e.keyCode) {
 				case Keyboard.ENTER:
 					DebugFunc.debugTrace("Enter");
-					processXPWidget(0.5, 0.51, 1, 0);
+					//processXPWidget(0.5, 0.51, 1, 0);
 					//var SendMessage = "Back?".concat(KeyPressCounter);
-					processKeyPress(0, KeyPressCounter);
+					//processKeyPress(0, KeyPressCounter);
+					var messageString = String(0) + "?" + "Test Name" + "?" + String(HealthCounter);
+					processHealthBar(messageString);
+					HealthCounter -= 0.05;
 					KeyPressCounter += 1.0;
 					break;
 				case Keyboard.HOME:
@@ -203,12 +235,13 @@
 					break;
 				case Keyboard.PAGE_DOWN:
 					DebugFunc.debugTrace("PgDn");
-					processXPWidget(0.9, 0.2, 25, 1);
+					//processXPWidget(0.9, 0.2, 25, 1);
+					removeHealthBar(1);
 					break;
 				case Keyboard.DELETE:
 					DebugFunc.debugTrace("Delete");
-					//processPreyTracker(4, 10, 0);
-					processNewLocation(0.5);
+					processPreyTracker(4, 10, 0);
+					//processNewLocation(0.5);
 					break;
 				case Keyboard.INSERT:
 					DebugFunc.debugTrace("Insert");
